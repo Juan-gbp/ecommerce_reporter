@@ -1,8 +1,7 @@
-import sys, redis, flask, requests
-from redis import Redis
+import requests
 
 # flask-server must already be running
-def main():
+def db_query():
 
     localhost = '127.0.0.1'
     flask_port = str('5000')
@@ -13,10 +12,5 @@ def main():
     url = str('{}/{}'.format(base_url, endpoint))
 
     response = requests.get('{}'.format(url))
-    print(response)
-    print(response.headers)
-    print(response.json())
 
-
-main()
-sys.exit()
+    return response
