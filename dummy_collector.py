@@ -3,19 +3,7 @@ from redis import Redis
 import requests
 from bs4 import BeautifulSoup
 
-response = requests.get('https://www.bjjhq.com/')
-
-
-soup = BeautifulSoup(response.text, "html.parser")
-
-#soup = soup.find('div', id="outerDiv").find('div', id="main").find('div', id="Panel1")
-#soup = soup.find('div', id="fullWidthWrapper").find('div', id="wrapper").find('div', id="container")
-name = soup.find('h1').text
-soup = soup.find('div', id="buyBox").find('div', id="buyButton")
-price = soup.find('em').text
-
-
-r = Redis(host='localhost', port=6379, db=0)
+r = Redis(host='localhost', port=6379)
 
 class MyClass:
   def __init__(self, name = '', price = 0):
@@ -29,12 +17,21 @@ class MyClass:
     self.name = name
     
 
-iter1 = MyClass()
-iter1.set_price(price)
-iter1.set_name(name)
+def update_db():
+    response = requests.get('https://www.bjjhq.com/')
 
-r.set('Price', iter1.price)
-r.set('Name', iter1.name)
+    soup = BeautifulSoup(response.text, "html.parser")
+    # for later
+    # soup = soup.find('div', id="outerDiv").find('div', id="main").find('div', id="Panel1")
+    # soup = soup.find('div', id="fullWidthWrapper").find('div', id="wrapper").find('div', id="container")
+    name = soup.find('h1').text
+    soup = soup.find('div', id="buyBox").find('div', id="buyButton")
+    # Replace dollar sign for type casting
+    price = soup.find('em').text.replace('$', '')
 
-print(r.get('Price'))
-print(r.get('Name'))
+    iter1 = MyClass()
+    iter1.set_price(price)
+    iter1.set_name(name)
+
+    r.set('Price', iter1.price)
+    r.set('Name', iter1.name)

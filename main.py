@@ -11,6 +11,7 @@ def main():
     print(response.headers)
     print(response.json())
     # Stop redis services
+
     os.system("redis-cli shutdown")
 
 
