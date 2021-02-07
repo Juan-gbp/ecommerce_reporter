@@ -34,3 +34,5 @@ collector.py
 -
 scrapes the BJJHQ and MMAHQ websites for new deals once an hour using
 requests and updates the redis db if deals have changed.
+
+#made some comments
